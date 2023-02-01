@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { getContacts } from "redux/selectors";
-import { addContact } from "redux/contactsSlice";
+import { addContact, getContacts } from "redux/contactsSlice";
 import { Form, Label, LabelName, Input, Button } from "components/ContactForm/ContactFotm.styled";
 
 export const ContactForm = () => {
@@ -13,16 +12,22 @@ export const ContactForm = () => {
         const name = form.elements.name.value; 
         const number = form.elements.number.value; 
 
-        const findedName = contacts.find(contact => { 
-        if (contact.name.toLowerCase() === name.toLowerCase() && contact.number === number) {
-            return contact.name;
+        let findedName = null;
+
+        if (!contacts) {
+            return;
+        } else { 
+            findedName = contacts.find(contact => { 
+                if (contact.name.toLowerCase() === name.toLowerCase() && contact.number === number) {
+                    return contact.name;
+                };
+                return undefined;
+            });
         };
-        return undefined;
-        });
 
         if (findedName) {
-        alert(`${findedName} is alredy in contacts.`);
-        return;
+            alert(`${findedName} is alredy in contacts.`);
+            return;
         }
 
         dispatch(addContact(name, number));
